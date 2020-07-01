@@ -7,7 +7,7 @@ import numpy as np
 
 from utils.stft import TacotronSTFT
 from utils.hparams import HParam
-from utils.utils import read_wav_np
+from utils.utils import read_wav_np, read_flac_np
 
 
 def main(hp, args):
@@ -19,10 +19,10 @@ def main(hp, args):
                         mel_fmin=hp.audio.mel_fmin,
                         mel_fmax=hp.audio.mel_fmax)
 
-    wav_files = glob.glob(os.path.join(args.data_path, '**', '*.wav'), recursive=True)
+    wav_files = glob.glob(os.path.join(args.data_path, '**', '*.flac'), recursive=True)
 
     for wavpath in tqdm.tqdm(wav_files, desc='preprocess wav to mel'):
-        sr, wav = read_wav_np(wavpath)
+        sr, wav = read_flac_np(wavpath)
         assert sr == hp.audio.sampling_rate, \
             "sample rate mismatch. expected %d, got %d at %s" % \
             (hp.audio.sampling_rate, sr, wavpath)
@@ -34,7 +34,7 @@ def main(hp, args):
         wav = torch.from_numpy(wav).unsqueeze(0)
         mel = stft.mel_spectrogram(wav)
 
-        melpath = wavpath.replace('.wav', '.mel')
+        melpath = wavpath.replace('.flac', '.mel')
         torch.save(mel, melpath)
 
 

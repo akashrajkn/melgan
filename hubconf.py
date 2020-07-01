@@ -30,10 +30,10 @@ if __name__ == '__main__':
 
     print('Input mel-spectrogram shape: {}'.format(mel.shape))
 
-    if torch.cuda.is_available():
-        print('Moving data & model to GPU')
-        vocoder = vocoder.cuda()
-        mel = mel.cuda()
+    # if torch.cuda.is_available():
+    #     print('Moving data & model to GPU')
+    #     vocoder = vocoder.cuda()
+    #     mel = mel.cuda()
 
     with torch.no_grad():
         audio = vocoder.inference(mel)
